@@ -7,7 +7,9 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": ""
     },
-    "prisma": {},
+    "prisma": {
+        "schema": "schema.prisma"
+    },
     "keywords": [],
     "author": "",
     "license": "ISC",
