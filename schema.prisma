@@ -7,6 +7,179 @@ generator client {
     provider = "prisma-client-js"
 }
 
-model User {
-    id String @id @default(auto()) @map("_id") @db.ObjectId
+enum ROLES_ENUM {
+    USER
+    ADMIN
+    SELLER
+}
+
+enum PERMISSIONS_ENUM {
+    CREATE_ACCOUNT
+    READ_ACCOUNT
+    UPDATE_ACCOUNT
+    DELETE_ACCOUNT
+
+    CREATE_PRODUCT
+    READ_PRODUCT
+    UPDATE_PRODUCT
+    DELETE_PRODUCT
+
+    CREATE_CART
+    READ_CART
+    UPDATE_CART
+    DELETE_CART
+
+    CREATE_ORDER
+    READ_ORDER
+    UPDATE_ORDER
+    DELETE_ORDER
+
+    CREATE_INVOICE
+    READ_INVOICE
+    UPDATE_INVOICE
+    DELETE_INVOICE
+
+    CREATE_FEEDBACK
+    READ_FEEDBACK
+    UPDATE_FEEDBACK
+    DELETE_FEEDBACK
+
+    CREATE_SHIPPING
+    READ_SHIPPING
+    UPDATE_SHIPPING
+    DELETE_SHIPPING
+
+    CREATE_SHOP
+    READ_SHOP
+    UPDATE_SHOP
+    DELETE_SHOP
+
+    CREATE_CLASSIFY
+    READ_CLASSIFY
+    UPDATE_CLASSIFY
+    DELETE_CLASSIFY
+
+    CREATE_SEARCH_HISTORY
+    READ_SEARCH_HISTORY
+    UPDATE_SEARCH_HISTORY
+    DELETE_SEARCH_HISTORY
+
+    GRANT_PERMISSION
+    READ_ANALYSIS
+}
+
+enum ADDRESS_TYPE_ENUM {
+    USER
+    SHOP
+    TRANSPORT
+}
+
+enum ADDRESS_CATEGORY_ENUM {
+    SHIPPING
+    BILLING
+}
+
+enum USER_TYPE_ENUM {
+    USER
+    PERSON
+}
+
+model AddressModel {
+    id       String                @id @default(auto()) @map("_id") @db.ObjectId
+    street   String
+    city     String
+    state    String
+    postCode String
+    country  String
+    default  Boolean               @default(false)
+    type     ADDRESS_TYPE_ENUM     @default(USER)
+    category ADDRESS_CATEGORY_ENUM // 
+    personId String                @db.ObjectId
+    person   PersonModel           @relation(references: [id], fields: [personId])
+}
+
+model ShopModel {
+    id                String      @id @default(auto()) @map("_id") @db.ObjectId
+    name              String
+    description       String
+    sellingCategories String[]
+    exportTo          String[]
+    createdDate       DateTime    @default(now())
+    updatedDate       DateTime?   @updatedAt
+    deletedDate       DateTime?
+    users             UserModel[]
+}
+
+model PersonModel {
+    id           String         @id @default(auto()) @map("_id") @db.ObjectId
+    name         String
+    email        String
+    phone        String
+    dob          String?
+    userModel    UserModel[]
+    addressModel AddressModel[]
+}
+
+model UserModel {
+    id              String             @id @default(auto()) @map("_id") @db.ObjectId
+    personId        String             @db.ObjectId
+    personModel     PersonModel        @relation(references: [id], fields: [personId])
+    avatar          String?
+    roles           ROLES_ENUM[]
+    permissions     PERMISSIONS_ENUM[]
+    createdDate     DateTime           @default(now())
+    updatedDate     DateTime?          @updatedAt
+    deletedDate     DateTime?
+    shop            ShopModel?         @relation(references: [id], fields: [shopModelId])
+    shopModelId     String?            @db.ObjectId
+    shippingAddress String?            @db.ObjectId
+    billingAddress  String?            @db.ObjectId
+    type            USER_TYPE_ENUM     @default(PERSON)
+    productModel    ProductModel[]
+}
+
+model ClassifyChildrenModel {
+    id               String        @id @default(auto()) @map("_id") @db.ObjectId
+    classifyParentId String        @db.ObjectId
+    classifyParent   ClassifyModel @relation(references: [id], fields: [classifyParentId])
+    name             String
+    quantity         Int           @default(0)
+    price            Int           @default(0)
+    displayName      String
+}
+
+model ClassifyModel {
+    id          String                  @id @default(auto()) @map("_id") @db.ObjectId
+    pid         String                  @db.ObjectId
+    product     ProductModel            @relation(references: [id], fields: [pid])
+    name        String
+    description String
+    photos      String[]
+    quantity    Int?                    @default(0)
+    price       Int?                    @default(0)
+    displayName String
+    createdDate DateTime                @default(now())
+    updatedDate DateTime?               @updatedAt
+    deletedDate DateTime?
+    children    ClassifyChildrenModel[]
+}
+
+model ProductModel {
+    id          String          @id @default(auto()) @map("_id") @db.ObjectId
+    name        String
+    description String
+    category    String
+    brand       String
+    tags        String[]
+    madeIn      String
+    thumbnail   String
+    exportTo    String[]
+    exportFrom  String[]
+    promotion   Int?
+    createdDate DateTime        @default(now())
+    updatedDate DateTime?       @updatedAt
+    deletedDate DateTime?
+    classifies  ClassifyModel[]
+    uid         String          @db.ObjectId
+    user        UserModel       @relation(fields: [uid], references: [id])
 }
