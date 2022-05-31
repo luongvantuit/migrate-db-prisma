@@ -1,5 +1,5 @@
 {
-    "name": "initial-data",
+    "name": "migrate-db-prisma",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
@@ -8,7 +8,7 @@
         "start": ""
     },
     "prisma": {
-        "schema": "schema.prisma"
+        "schema": "./schema.prisma"
     },
     "keywords": [],
     "author": "",

@@ -1,2 +1,2 @@
-# Prisma, TypeORM
+# Prisma
 
