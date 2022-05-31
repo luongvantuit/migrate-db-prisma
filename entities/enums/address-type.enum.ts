@@ -1,5 +1,0 @@
-export enum ADDRESS_TYPE_ENUM {
-  USER = "USER",
-  SHOP = "SHOP",
-  TRANSPORT = "TRANSPORT",
-}
