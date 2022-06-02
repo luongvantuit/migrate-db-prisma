@@ -95,47 +95,40 @@ model AddressModel {
     type     ADDRESS_TYPE_ENUM     @default(USER)
     category ADDRESS_CATEGORY_ENUM // 
     personId String                @db.ObjectId
-    person   PersonModel           @relation(references: [id], fields: [personId])
 }
 
-model ShopModel {
-    id                String      @id @default(auto()) @map("_id") @db.ObjectId
+type ShopType {
     name              String
     description       String
     sellingCategories String[]
     exportTo          String[]
-    createdDate       DateTime    @default(now())
-    updatedDate       DateTime?   @updatedAt
+    createdDate       DateTime  @default(now())
+    updatedDate       DateTime?
     deletedDate       DateTime?
-    users             UserModel[]
 }
 
 model PersonModel {
-    id           String         @id @default(auto()) @map("_id") @db.ObjectId
-    name         String
-    email        String
-    phone        String
-    dob          String?
-    userModel    UserModel[]
-    addressModel AddressModel[]
+    id    String  @id @default(auto()) @map("_id") @db.ObjectId
+    name  String
+    email String
+    phone String
+    dob   String?
 }
 
 model UserModel {
     id              String             @id @default(auto()) @map("_id") @db.ObjectId
-    personId        String             @db.ObjectId
-    personModel     PersonModel        @relation(references: [id], fields: [personId])
+    personId        String
     avatar          String?
     roles           ROLES_ENUM[]
     permissions     PERMISSIONS_ENUM[]
     createdDate     DateTime           @default(now())
     updatedDate     DateTime?          @updatedAt
     deletedDate     DateTime?
-    shop            ShopModel?         @relation(references: [id], fields: [shopModelId])
+    shop            ShopType?
     shopModelId     String?            @db.ObjectId
     shippingAddress String?            @db.ObjectId
     billingAddress  String?            @db.ObjectId
     type            USER_TYPE_ENUM     @default(PERSON)
-    productModel    ProductModel[]
 }
 
 model ClassifyChildrenModel {
@@ -181,5 +174,4 @@ model ProductModel {
     deletedDate DateTime?
     classifies  ClassifyModel[]
     uid         String          @db.ObjectId
-    user        UserModel       @relation(fields: [uid], references: [id])
 }
