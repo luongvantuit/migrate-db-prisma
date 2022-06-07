@@ -15,17 +15,12 @@ async function main() {
 main()
   .catch(async (e) => {
     await prisma.$disconnect();
-    console.log(e);
-
-    console.log("failed to connect");
+    console.log("failed to connect!");
   })
   .then(async () => {
-    await prisma.personModel.create({
+    await prisma.user.create({
       data: {
-        name: "John",
-        email: "john@example.com",
-        phone: "123",
-        dob: "John",
+        
       },
     });
   });

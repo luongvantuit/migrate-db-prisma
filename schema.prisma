@@ -84,7 +84,7 @@ enum USER_TYPE_ENUM {
     PERSON
 }
 
-model AddressModel {
+model Address {
     id       String                @id @default(auto()) @map("_id") @db.ObjectId
     street   String
     city     String
@@ -97,7 +97,7 @@ model AddressModel {
     personId String                @db.ObjectId
 }
 
-type ShopType {
+type Shop {
     name              String
     description       String
     sellingCategories String[]
@@ -107,7 +107,7 @@ type ShopType {
     deletedDate       DateTime?
 }
 
-model PersonModel {
+model Person {
     id    String  @id @default(auto()) @map("_id") @db.ObjectId
     name  String
     email String
@@ -115,50 +115,45 @@ model PersonModel {
     dob   String?
 }
 
-model UserModel {
+model User {
     id              String             @id @default(auto()) @map("_id") @db.ObjectId
-    personId        String
+    personId        String?            @db.ObjectId
     avatar          String?
     roles           ROLES_ENUM[]
     permissions     PERMISSIONS_ENUM[]
     createdDate     DateTime           @default(now())
     updatedDate     DateTime?          @updatedAt
     deletedDate     DateTime?
-    shop            ShopType?
-    shopModelId     String?            @db.ObjectId
+    shop            Shop?
     shippingAddress String?            @db.ObjectId
     billingAddress  String?            @db.ObjectId
     type            USER_TYPE_ENUM     @default(PERSON)
 }
 
-model ClassifyChildrenModel {
-    id               String        @id @default(auto()) @map("_id") @db.ObjectId
-    classifyParentId String        @db.ObjectId
-    classifyParent   ClassifyModel @relation(references: [id], fields: [classifyParentId])
-    name             String
-    quantity         Int           @default(0)
-    price            Int           @default(0)
-    displayName      String
+type ClassifyChildren {
+    name        String
+    quantity    Int    @default(0)
+    price       Int    @default(0)
+    displayName String
 }
 
-model ClassifyModel {
-    id          String                  @id @default(auto()) @map("_id") @db.ObjectId
-    pid         String                  @db.ObjectId
-    product     ProductModel            @relation(references: [id], fields: [pid])
+model Classify {
+    id          String             @id @default(auto()) @map("_id") @db.ObjectId
+    pid         String             @db.ObjectId
     name        String
     description String
     photos      String[]
-    quantity    Int?                    @default(0)
-    price       Int?                    @default(0)
+    quantity    Int?               @default(0)
+    price       Int?               @default(0)
     displayName String
-    createdDate DateTime                @default(now())
-    updatedDate DateTime?               @updatedAt
+    createdDate DateTime           @default(now())
+    updatedDate DateTime?          @updatedAt
     deletedDate DateTime?
-    children    ClassifyChildrenModel[]
+    children    ClassifyChildren[]
 }
 
-model ProductModel {
-    id          String          @id @default(auto()) @map("_id") @db.ObjectId
+model product {
+    id          String    @id @default(auto()) @map("_id") @db.ObjectId
     name        String
     description String
     category    String
@@ -169,9 +164,8 @@ model ProductModel {
     exportTo    String[]
     exportFrom  String[]
     promotion   Int?
-    createdDate DateTime        @default(now())
-    updatedDate DateTime?       @updatedAt
+    createdDate DateTime  @default(now())
+    updatedDate DateTime? @updatedAt
     deletedDate DateTime?
-    classifies  ClassifyModel[]
-    uid         String          @db.ObjectId
+    uid         String    @db.ObjectId
 }
